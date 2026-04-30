@@ -59,7 +59,7 @@ public class ConsoleUI{
                     new SelectionPrompt<string>()
                         .Title("What do you want to do?")
                         .AddChoices(new[] {
-                            "add stop", "delete stop", "list all stops", "end"
+                            "show busiest stop","add stop", "delete stop", "list all stops", "end"
                         }));
 
                 if(command=="add stop") {
@@ -78,6 +78,10 @@ public class ConsoleUI{
                     }
                     AnsiConsole.Write(table);
                 } 
+                else if(command=="show busiest stop") {
+                    var result = Reporter.FindBusiestStop(dataManager.PassengerData);
+                    Console.WriteLine("The busiest stop is: "+result.Name);
+                }
                 
             } while (command != "end");
         }
