@@ -19,10 +19,9 @@ public class ConsoleUI{
                                 "driver","manager"
                             }));
 
-        var selectedDriver = AnsiConsole.Prompt(new SelectionPrompt<Driver>().Title("Select a driver").AddChoices(dataManager.Drivers));
-        Console.WriteLine("Now you are driving as "+selectedDriver.Name);
-
         if(mode == "driver"){
+            var selectedDriver = AnsiConsole.Prompt(new SelectionPrompt<Driver>().Title("Select a driver").AddChoices(dataManager.Drivers));
+            Console.WriteLine("Now you are driving as "+selectedDriver.Name);
 
             var selectedLoop = AnsiConsole.Prompt(new SelectionPrompt<Loop>().Title("Select a loop").AddChoices(dataManager.Loops));
             Console.WriteLine("You are driving "+selectedLoop.Name+" loop today!");
@@ -49,6 +48,38 @@ public class ConsoleUI{
 
 
             } while(command != "end");
+        }
+        else if(mode == "manager")
+        {
+            string command;
+
+            do
+            {
+                command = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("What do you want to do?")
+                        .AddChoices(new[] {
+                            "add stop", "delete stop", "list all stops", "end"
+                        }));
+
+                if(command=="add stop") {
+                    var newStopName = AnsiConsole.Prompt(new TextPrompt<string>("Enter new stop name:"));
+                    dataManager.AddStop(newStopName);
+                } 
+                else if(command=="delete stop") {
+                    var selectedStop = AnsiConsole.Prompt(new SelectionPrompt<Stop>().Title("Select a stop").AddChoices(dataManager.Stops));
+                    dataManager.RemoveStop(selectedStop);
+                }
+                else if(command=="list all stops") {
+                    var table = new Table();
+                    table.AddColumn("Stops");
+                    foreach(var stop in dataManager.Stops) {
+                        table.AddRow(stop.Name);
+                    }
+                    AnsiConsole.Write(table);
+                } 
+                
+            } while (command != "end");
         }
     }
 
